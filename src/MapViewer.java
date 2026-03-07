@@ -18,7 +18,7 @@ public class MapViewer extends JPanel {
     private double minY = Double.MAX_VALUE;
     private double maxY = -Double.MAX_VALUE;
 
-
+//sda
 
     public MapViewer() {
         try {
