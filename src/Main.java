@@ -4,6 +4,9 @@ public class Main {
     public static void main(String[] args){
         Twitt twitt = new Twitt("");
         List<Twitt> twitts = twitt.loadFromFile();
+        for(Twitt t : twitts){
+            t.twittParcer();
+        }
         if(twitts.isEmpty()){
             System.out.println("твитов нету");
         }else{
@@ -12,5 +15,6 @@ public class Main {
             }
 
         }
+        Twitt.saveToFile(twitts, "twitts.json");
     }
 }
