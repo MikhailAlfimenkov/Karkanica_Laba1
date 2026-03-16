@@ -1,18 +1,48 @@
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.awt.*;
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-public static List<double[]> loadCoordinatesFromJson(String jsonFilePath) {
-    ObjectMapper mapper = new ObjectMapper();
-    List<double[]> coordinates = new ArrayList<>();
-    try {
-        List<Twitt> twitts = mapper.readValue(new File(jsonFilePath), new TypeReference<List<Twitt>>() {});
-        for (Twitt twitt : twitts) {
-            coordinates.add(new double[]{twitt.coordinateX, twitt.coordinateY});
-        }
-    } catch (IOException e) {
-        System.out.println("Ошибка чтения JSON: " + e.getMessage());
+import java.util.Map;
+
+public class CoordinatesWork {
+
+    private List<Map<String, Object>> tweets;
+
+    public CoordinatesWork(String jsonPath) {
+        loadTweets(jsonPath);
     }
-    return coordinates;
+
+    @SuppressWarnings("unchecked")
+    private void loadTweets(String path) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            tweets = mapper.readValue(new File(path),
+                    new TypeReference<List<Map<String, Object>>>() {});
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void draw(Graphics2D g2,
+                     double minX, double minY,
+                     double scale, double offsetX, double offsetY,
+                     double panelHeight) {
+
+        if (tweets == null) return;
+
+        g2.setColor(Color.RED);
+
+        for (Map<String, Object> t : tweets) {
+            double lon = (double) t.get("coordinateY"); // долгота
+            double lat = (double) t.get("coordinateX"); // широта
+
+            double px = (lon - minX) * scale + offsetX;
+            double py = panelHeight - ((lat - minY) * scale + offsetY);
+
+
+            g2.fillOval((int) px - 3, (int) py - 3, 6, 6);
+        }
+    }
 }

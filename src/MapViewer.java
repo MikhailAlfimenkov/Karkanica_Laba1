@@ -17,6 +17,7 @@ public class MapViewer extends JPanel {
     private double maxX = -Double.MAX_VALUE;
     private double minY = Double.MAX_VALUE;
     private double maxY = -Double.MAX_VALUE;
+    private CoordinatesWork tweetRenderer = new CoordinatesWork("twitts.json");
 
 //sda
 
@@ -76,15 +77,6 @@ public class MapViewer extends JPanel {
             }
         }
     }
-// Это функция для рисования точки, если димас не написал
-//    private void drawPoint(Graphics2D g2, double x, double y) {
-//        double px = (x - minX) * scale + offsetX;
-//        double py = panelHeight - ((y - minY) * scale + offsetY);
-//
-//        g2.setColor(Color.RED);
-//        g2.fillOval((int)px - 4, (int)py - 4, 8,8);
-//    }
-
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -132,7 +124,9 @@ public class MapViewer extends JPanel {
 
             g2.setColor(Color.BLACK);
             g2.draw(path);
+
         }
+        tweetRenderer.draw(g2, minX, minY, scale, offsetX, offsetY, panelHeight);
     }
 
     public static void main(String[] args) {
@@ -141,5 +135,6 @@ public class MapViewer extends JPanel {
         frame.setSize(1100, 700);
         frame.add(new MapViewer());
         frame.setVisible(true);
+
     }
 }

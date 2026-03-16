@@ -8,18 +8,15 @@ import java.util.Arrays;
 import java.util.*;
 import java.util.ArrayList;
 public class Twitt {
-    //public State state;
     public double coordinateX;
     public double coordinateY;
-    //public int date;
-    //public int time;
     public String text;
     public Twitt(String text){
         this.text = text;
     }
     public List<Twitt> loadFromFile()
     {
-        String filePath = "E:/University/family_tweets2014.txt";
+        String filePath = "D:/ForDeveloping/football_tweets2014.txt";
         File file = new File(filePath);
         List<Twitt> twitts = new ArrayList<>();
         if(!file.exists()){
