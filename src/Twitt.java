@@ -11,12 +11,17 @@ public class Twitt {
     public double coordinateX;
     public double coordinateY;
     public String text;
+
+    public Twitt() {
+
+    }
+
     public Twitt(String text){
         this.text = text;
     }
     public List<Twitt> loadFromFile()
     {
-        String filePath = "D:/ForDeveloping/football_tweets2014.txt";
+        String filePath = "family_tweets2014.txt";
         File file = new File(filePath);
         List<Twitt> twitts = new ArrayList<>();
         if(!file.exists()){

@@ -1,4 +1,3 @@
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -29,7 +28,9 @@ public class MapViewer extends JPanel {
                     new TypeReference<Map<String, Object>>() {});
 
             stateLocator = new StateLocator(states);
-            tweetRenderer = new CoordinatesWork("twitts.json", stateLocator);
+
+            List<TwittC> tweets = TwittScore.loadAndScoreTweets("sentiments.csv", "twitts.json");
+            tweetRenderer = new CoordinatesWork(tweets, stateLocator);
 
             computeBounds();
 
@@ -47,9 +48,7 @@ public class MapViewer extends JPanel {
 
         Object first = list.get(0);
 
-        if (first instanceof Number && list.size() == 2) {
-            return;
-        }
+        if (first instanceof Number && list.size() == 2) return;
 
         if (first instanceof List && ((List<?>) first).size() == 2 &&
                 ((List<?>) first).get(0) instanceof Number) {

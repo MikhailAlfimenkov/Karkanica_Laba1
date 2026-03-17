@@ -1,30 +1,24 @@
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.awt.*;
-import java.io.File;
 import java.util.List;
-import java.util.Map;
 
 public class CoordinatesWork {
 
-    private List<Map<String, Object>> tweets;
+    private final List<TwittC> tweets;
     private final StateLocator stateLocator;
 
-    public CoordinatesWork(String jsonPath, StateLocator stateLocator) {
-        this.stateLocator = stateLocator;
-        loadTweets(jsonPath);
+    public CoordinatesWork(List<TwittC> tweets, StateLocator locator) {
+        this.tweets = tweets;
+        this.stateLocator = locator;
     }
 
-    @SuppressWarnings("unchecked")
-    private void loadTweets(String path) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            tweets = mapper.readValue(new File(path),
-                    new TypeReference<List<Map<String, Object>>>() {});
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    private Color getColor(double score) {
+        double s = Math.max(0, Math.min(1, score / 1.0));
+
+        int r = (int)(255 * s);
+        int g = (int)(200 * (1 - s));
+        int b = (int)(220 * (1 - s));
+
+        return new Color(r, g, b);
     }
 
     public void draw(Graphics2D g2,
@@ -34,21 +28,15 @@ public class CoordinatesWork {
 
         if (tweets == null) return;
 
-        g2.setColor(Color.RED);
-
-        for (Map<String, Object> t : tweets) {
-            double lon = (double) t.get("coordinateY"); // долгота
-            double lat = (double) t.get("coordinateX"); // широта
+        for (TwittC t : tweets) {
+            double lon = t.coordinateY;
+            double lat = t.coordinateX;
 
             double px = (lon - minX) * scale + offsetX;
             double py = panelHeight - ((lat - minY) * scale + offsetY);
 
-            g2.fillOval((int) px - 3, (int) py - 3, 6, 6);
-
-            if (stateLocator != null) {
-                String state = stateLocator.findState(lon, lat);
-                System.out.println("Tweet at (" + lat + ", " + lon + ") in state: " + state);
-            }
+            g2.setColor(getColor(t.score));
+            g2.fillOval((int) px - 4, (int) py - 4, 8, 8);
         }
     }
 }

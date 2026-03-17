@@ -19,12 +19,8 @@ public class StateLocator {
 
         Object first = list.get(0);
 
-        // [x, y]
-        if (first instanceof Number && list.size() == 2) {
-            return;
-        }
+        if (first instanceof Number && list.size() == 2) return;
 
-        // [[x,y], [x,y], ...]
         if (first instanceof List && ((List<?>) first).size() == 2 &&
                 ((List<?>) first).get(0) instanceof Number) {
             out.add((List<List<Double>>) list);
