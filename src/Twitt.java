@@ -52,15 +52,15 @@ public class Twitt {
         }catch(Exception e){
             System.out.println("ошибка: " + e.getMessage());
         }
-        }
+    }
 
-        public static void saveToFile(List<Twitt> twitts, String path){
+    public static void saveToFile(List<Twitt> twitts, String path){
         ObjectMapper mapper = new ObjectMapper();
         try{
             mapper.writerWithDefaultPrettyPrinter().writeValue(new File("twitts.json"), twitts);
         }catch(IOException e){
             System.out.println("ошибка json");
         }
-        }
+    }
 
 }

@@ -9,8 +9,10 @@ import java.util.Map;
 public class CoordinatesWork {
 
     private List<Map<String, Object>> tweets;
+    private final StateLocator stateLocator;
 
-    public CoordinatesWork(String jsonPath) {
+    public CoordinatesWork(String jsonPath, StateLocator stateLocator) {
+        this.stateLocator = stateLocator;
         loadTweets(jsonPath);
     }
 
@@ -41,8 +43,12 @@ public class CoordinatesWork {
             double px = (lon - minX) * scale + offsetX;
             double py = panelHeight - ((lat - minY) * scale + offsetY);
 
-
             g2.fillOval((int) px - 3, (int) py - 3, 6, 6);
+
+            if (stateLocator != null) {
+                String state = stateLocator.findState(lon, lat);
+                System.out.println("Tweet at (" + lat + ", " + lon + ") in state: " + state);
+            }
         }
     }
 }

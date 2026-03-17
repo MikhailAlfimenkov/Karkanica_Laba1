@@ -1,3 +1,4 @@
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -17,14 +18,18 @@ public class MapViewer extends JPanel {
     private double maxX = -Double.MAX_VALUE;
     private double minY = Double.MAX_VALUE;
     private double maxY = -Double.MAX_VALUE;
-    private CoordinatesWork tweetRenderer = new CoordinatesWork("twitts.json");
 
-//sda
+    private StateLocator stateLocator;
+    private CoordinatesWork tweetRenderer;
 
     public MapViewer() {
         try {
             ObjectMapper mapper = new ObjectMapper();
-            states = mapper.readValue(new File("states.json"), new TypeReference<Map<String, Object>>() {});
+            states = mapper.readValue(new File("states.json"),
+                    new TypeReference<Map<String, Object>>() {});
+
+            stateLocator = new StateLocator(states);
+            tweetRenderer = new CoordinatesWork("twitts.json", stateLocator);
 
             computeBounds();
 
@@ -33,21 +38,19 @@ public class MapViewer extends JPanel {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void extractRings(Object obj, List<List<List<Double>>> out) {
         if (!(obj instanceof List)) return;
 
         List<?> list = (List<?>) obj;
-
         if (list.isEmpty()) return;
 
         Object first = list.get(0);
 
-        // [x, y]
         if (first instanceof Number && list.size() == 2) {
             return;
         }
 
-        // [[x,y], [x,y], ...]
         if (first instanceof List && ((List<?>) first).size() == 2 &&
                 ((List<?>) first).get(0) instanceof Number) {
             out.add((List<List<Double>>) list);
@@ -77,6 +80,7 @@ public class MapViewer extends JPanel {
             }
         }
     }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -92,9 +96,7 @@ public class MapViewer extends JPanel {
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-
         for (Object stateObj : states.values()) {
-
             List<List<List<Double>>> rings = new ArrayList<>();
             extractRings(stateObj, rings);
 
@@ -124,8 +126,8 @@ public class MapViewer extends JPanel {
 
             g2.setColor(Color.BLACK);
             g2.draw(path);
-
         }
+
         tweetRenderer.draw(g2, minX, minY, scale, offsetX, offsetY, panelHeight);
     }
 
@@ -135,6 +137,5 @@ public class MapViewer extends JPanel {
         frame.setSize(1100, 700);
         frame.add(new MapViewer());
         frame.setVisible(true);
-
     }
 }
