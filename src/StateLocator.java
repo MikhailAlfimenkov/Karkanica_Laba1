@@ -4,7 +4,7 @@ import java.util.Map;
 
 public class StateLocator {
 
-    private final Map<String, Object> states;
+    private Map<String, Object> states;
 
     public StateLocator(Map<String, Object> states) {
         this.states = states;

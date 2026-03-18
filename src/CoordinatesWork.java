@@ -3,12 +3,10 @@ import java.util.List;
 
 public class CoordinatesWork {
 
-    private final List<TwittC> tweets;
-    private final StateLocator stateLocator;
+    private List<TwittC> tweets;
 
     public CoordinatesWork(List<TwittC> tweets, StateLocator locator) {
         this.tweets = tweets;
-        this.stateLocator = locator;
     }
 
     private Color getColor(double score) {

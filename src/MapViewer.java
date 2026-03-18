@@ -20,6 +20,7 @@ public class MapViewer extends JPanel {
 
     private StateLocator stateLocator;
     private CoordinatesWork tweetRenderer;
+    private StateScores stateScores;
 
     public MapViewer() {
         try {
@@ -30,6 +31,8 @@ public class MapViewer extends JPanel {
             stateLocator = new StateLocator(states);
 
             List<TwittC> tweets = TwittScore.loadAndScoreTweets("sentiments.csv", "twitts.json");
+
+            stateScores = new StateScores(tweets, stateLocator);
             tweetRenderer = new CoordinatesWork(tweets, stateLocator);
 
             computeBounds();
@@ -37,6 +40,16 @@ public class MapViewer extends JPanel {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private Color getStateColor(double score) {
+        double s = Math.max(0, Math.min(1, score / 1.0));
+
+        int r = (int)(205 * s);
+        int g = (int)(120 * (1 - s));
+        int b = (int)(230 * (1 - s));
+
+        return new Color(r, g, b);
     }
 
     @SuppressWarnings("unchecked")
@@ -95,7 +108,11 @@ public class MapViewer extends JPanel {
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        for (Object stateObj : states.values()) {
+        for (Map.Entry<String, Object> entry : states.entrySet()) {
+
+            String stateName = entry.getKey();
+            Object stateObj = entry.getValue();
+
             List<List<List<Double>>> rings = new ArrayList<>();
             extractRings(stateObj, rings);
 
@@ -120,12 +137,19 @@ public class MapViewer extends JPanel {
                 }
             }
 
-            g2.setColor(new Color(180, 200, 255));
+            if (!stateScores.hasTweets(stateName)) {
+                g2.setColor(new Color(180, 180, 180)); // серый
+            } else {
+                double score = stateScores.getScore(stateName);
+                g2.setColor(getStateColor(score));
+            }
+
             g2.fill(path);
 
             g2.setColor(Color.BLACK);
             g2.draw(path);
         }
+
 
         tweetRenderer.draw(g2, minX, minY, scale, offsetX, offsetY, panelHeight);
     }

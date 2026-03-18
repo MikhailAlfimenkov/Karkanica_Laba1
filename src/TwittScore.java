@@ -9,7 +9,6 @@ public class TwittScore {
         Map<String, Double> wordSentiments = new HashMap<>();
         int maxWord = 0;
 
-        // Загружаем словарь
         try (Scanner scanner = new Scanner(new File(sentimentsPath))) {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
@@ -27,7 +26,6 @@ public class TwittScore {
             e.printStackTrace();
         }
 
-        // Загружаем твиты
         ObjectMapper mapper = new ObjectMapper();
         List<TwittC> tweets = new ArrayList<>();
 
@@ -38,7 +36,6 @@ public class TwittScore {
             e.printStackTrace();
         }
 
-        // Считаем score
         for (TwittC t : tweets) {
             double totalScore = 0;
 
