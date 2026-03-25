@@ -50,9 +50,7 @@ public class Twitt {
             String[] coordinates = coordPart.split(",");
             coordinateX = Double.parseDouble(coordinates[0].trim());
             coordinateY = Double.parseDouble(coordinates[1].trim());
-            //String[] dateTime = parts[2].split(" ");
-            //date = Integer.parseInt(dateTime[0].replace("_",""));
-            //time = Integer.parseInt(dateTime[1].replace(":",""));
+
             text = parts[3];
         }catch(Exception e){
             System.out.println("ошибка: " + e.getMessage());

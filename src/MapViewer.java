@@ -154,11 +154,4 @@ public class MapViewer extends JPanel {
         tweetRenderer.draw(g2, minX, minY, scale, offsetX, offsetY, panelHeight);
     }
 
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("US States Map");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(1100, 700);
-        frame.add(new MapViewer());
-        frame.setVisible(true);
-    }
 }
